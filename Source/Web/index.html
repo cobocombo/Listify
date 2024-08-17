@@ -5,9 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listify</title>
     <link rel="stylesheet" href="Libraries/uikit/css/uikit.min.css">
+    <style>
+      .uk-navbar-container 
+      {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+    </style>
 </head>
 <body>
-    <script src="Libraries/uikit/js/uikit.min.js"></script>
-    <script src="Libraries/uikit/js/uikit-icons.min.js"></script>
+  <nav class="uk-navbar-container" uk-navbar>
+    <div class="uk-navbar-left">
+        <a class="uk-navbar-item uk-logo" href="#">
+          Listify
+        </a>
+      </div>
+    <div class="uk-navbar-right">
+        <ul class="uk-navbar-nav">
+            <li><a href="Pages/login.html">Login</a></li>
+            <li><a href="Pages/signup.html">Sign Up</a></li>
+        </ul>
+    </div>
+  </nav>
+  <script src="Libraries/uikit/js/uikit.min.js"></script>
+  <script src="Libraries/uikit/js/uikit-icons.min.js"></script>
 </body>
 </html>
