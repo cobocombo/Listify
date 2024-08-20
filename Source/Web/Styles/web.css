@@ -14,6 +14,12 @@
   font-style: normal;
 }
 
+.uk-navbar-container 
+{
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
 .nav-logo
 {
   height: 100%;
@@ -22,14 +28,19 @@
   display: block;
 }
 
-.uk-navbar-nav li a 
+.uk-card-title, .uk-button-primary, .uk-link-reset, .uk-link-text
 {
-  font-family: 'MaestroBook' !important;
+  font-family: "MaestroBold";
+  font-weight: bold;
+}
+
+.uk-navbar-nav li a, .uk-input, .checkbox-label, .uk-text-small
+{
+  font-family: 'MaestroBook';
   font-weight: normal;
 }
 
-.uk-navbar-container 
+.uk-input, .uk-card
 {
-  padding-left: 20px;
-  padding-right: 20px;
+  border-radius: 8px;
 }
