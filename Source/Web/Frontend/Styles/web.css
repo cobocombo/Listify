@@ -28,7 +28,7 @@
   display: block;
 }
 
-.uk-card-title, .uk-button-primary, .uk-link-reset, .uk-link-text
+.uk-card-title, .uk-button-primary, .uk-link-reset, .uk-link-text, .uk-heading-medium, .uk-text-large
 {
   font-family: "MaestroBold";
   font-weight: bold;
