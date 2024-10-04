@@ -43,4 +43,47 @@
 .uk-input, .uk-card, .uk-button-primary
 {
   border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.uk-card
+{
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+.background-image 
+{
+  background-image: url('../Resources/Images/Backgrounds/Background-1.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  width: 100vw;  
+}
+
+.uk-notification-message 
+{
+  font-family: 'MaestroBold';
+  text-align: center;
+  font-size: medium;
+}
+
+.spinner-overlay
+{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.25);
+  z-index: 9999;
+}
+
+:root 
+{
+  --sk-size: 50px;
+  --sk-color: white;
 }
