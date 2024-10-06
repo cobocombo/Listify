@@ -1,14 +1,15 @@
+////////////////////////////////////////////////////////////////////////
+
 // Function called when the user hits the sign up button on signup.html.
 document.addEventListener('DOMContentLoaded', function () 
 {
-  const form = document.getElementById('signup-form');
+  let form = document.getElementById('signup-form');
   form.addEventListener('submit', function (event) 
   {
     event.preventDefault();
     var baseUrl = '';
     let formData = new FormData(form);
     let userData = Object.fromEntries(formData.entries());
-
     let firstName = userData['first-name'];
     let lastName = userData['last-name'];
     let email = userData['email'];
@@ -19,9 +20,9 @@ document.addEventListener('DOMContentLoaded', function ()
     let emailValidationResult = validateEmail(email);
     let passwordValidationResult = validateNewPassword(password);
 
-    if(checkFirstAndLastNameValidationResults(firstNameValidationResult, lastNameValidationResult) == false) { return; }
-    if(checkEmailValidationResult(emailValidationResult) == false) { return; }
-    if(checkPasswordValidationResult(passwordValidationResult) == false) { return; }
+    if(checkFirstAndLastNameValidationResultsSignup(firstNameValidationResult, lastNameValidationResult) == false) { return; }
+    if(checkEmailValidationResultSignup(emailValidationResult) == false) { return; }
+    if(checkPasswordValidationResultSignup(passwordValidationResult) == false) { return; }
     if(checkForTermsCheckboxValidation(document.getElementById("terms-checkbox").checked) == false) { return; }
 
     if(DEBUG_MODE == true) { baseUrl = DEBUG_BASE_URL; }
@@ -29,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function ()
 
     showSpinnerWithOverlay();
 
-    fetch(baseUrl + SHARED_SIGNUP_ROUTE, 
+    fetch(baseUrl + 'shared/api/signup', 
     {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -39,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function ()
     {
       if(response.status === 409) { UIkit.notification({ message: 'EMAIL IS ALREADY IN USE. LOGIN INSTEAD?', status: 'danger', pos: 'top-center', timeout: 2500}); }
       else if(response.status === 400) { UIkit.notification({ message: 'MUST FILL OUT ALL DATA FIELDS', status: 'danger', pos: 'top-center', timeout: 2500}); }
-      else if(response.status === 200) { window.location.href = 'dashboard.html'; }
+      else if(response.status === 200) { window.location.href = '/dashboard'; }
       else { UIkit.notification({ message: 'UNEXPECTED ERROR OCCURRED. PLEASE TRY AGAIN', status: 'danger', pos: 'top-center', timeout: 2500}); }
       hideSpinnerWithOverlay();
     })
@@ -51,21 +52,11 @@ document.addEventListener('DOMContentLoaded', function ()
   });
 });
 
-// Function to hide the spinner-overlay element programatically after the page is done making a request.
-function hideSpinnerWithOverlay()
-{
-  document.querySelector('.spinner-overlay').style.display = 'none';
-}
-
-// Function to show the spinner-overlay element, to show the page is making a request.
-function showSpinnerWithOverlay()
-{
-  document.querySelector('.spinner-overlay').style.display = 'flex';
-}
+////////////////////////////////////////////////////////////////////////
 
 // Function to check the first and last name validation results and notify the user based on each type of result can be returned 
 // from the name validation. Returns false if any of the results came back as anything but valid. See inputValidator.js.
-function checkFirstAndLastNameValidationResults(firstNameValidationResult, lastNameValidationResult)
+function checkFirstAndLastNameValidationResultsSignup(firstNameValidationResult, lastNameValidationResult)
 {
   if(firstNameValidationResult == NAME_VALIDATION_STATUSES.EMPTY)
   {
@@ -121,9 +112,11 @@ function checkFirstAndLastNameValidationResults(firstNameValidationResult, lastN
   return true;
 }
 
+////////////////////////////////////////////////////////////////////////
+
 // Function to check the email validation result and notify the user based on each type of result can be returned 
 // from the email validation. Returns false if any of the results came back as anything but valid. See inputValidator.js.
-function checkEmailValidationResult(emailValidationResult)
+function checkEmailValidationResultSignup(emailValidationResult)
 {
   if(emailValidationResult == EMAIL_VALIDATION_STATUSES.EMPTY)
   {
@@ -138,9 +131,11 @@ function checkEmailValidationResult(emailValidationResult)
   return true;
 }
 
+////////////////////////////////////////////////////////////////////////
+
 // Function to check the password validation result and notify the user based on each type of result can be returned 
 // from the password validation. Returns false if any of the results came back as anything but valid. See inputValidator.js.
-function checkPasswordValidationResult(passwordValidationResult)
+function checkPasswordValidationResultSignup(passwordValidationResult)
 {
   if(passwordValidationResult == PASSWORD_VALIDATION_STATUSES.EMPTY)
   {
@@ -175,6 +170,8 @@ function checkPasswordValidationResult(passwordValidationResult)
   return true;
 }
 
+////////////////////////////////////////////////////////////////////////
+
 // Function to check for the current state of the terms of service & privacy policy checkbox, and notify the user if it is not selected.
 // Returns false if the current state of the checkbox comes back unchecked or false. 
 function checkForTermsCheckboxValidation(termsChecked)
@@ -186,3 +183,9 @@ function checkForTermsCheckboxValidation(termsChecked)
   }
   else { return true; }
 }
+
+////////////////////////////////////////////////////////////////////////
+
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+////////////////////////////////////////////////////////////////////////
