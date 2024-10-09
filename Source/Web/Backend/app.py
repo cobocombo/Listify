@@ -173,6 +173,8 @@ def shared_login():
     passwords_match = (hashed_password == user_hashed_password)
 
     if passwords_match:
+      delete_old_session_sql = "DELETE FROM sessions WHERE user_id = ?"
+      cursor.execute(delete_old_session_sql, (user_id,))
       token = secrets.token_urlsafe(64)
       insert_new_session_sql = "INSERT INTO sessions (token, user_id, created_at) VALUES (?, ?, ?)"
       token_created_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
