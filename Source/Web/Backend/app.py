@@ -4,6 +4,8 @@
 
 from flask import Flask, jsonify, request, g
 import sqlite3
+import secrets
+from datetime import datetime
 import os
 import hashlib
 
@@ -121,21 +123,26 @@ def shared_signup():
   if not all([first_name, last_name, email, password]):
     return jsonify({'error': 'Missing required fields'}), 400
 
-  hashed_password = hash_password(password)
-  sql = """INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)"""
-
   db = get_db()
   try:
     cursor = db.cursor()
-    cursor.execute(sql, (first_name, last_name, email, hashed_password))
+    hashed_password = hash_password(password)
+    insert_new_user_sql = """INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)"""
+    cursor.execute(insert_new_user_sql, (first_name, last_name, email, hashed_password))
     db.commit()
+    user_id = cursor.lastrowid
+    token = secrets.token_urlsafe(64)
+    insert_new_session_sql = "INSERT INTO sessions (token, user_id, created_at) VALUES (?, ?, ?)"
+    token_created_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    cursor.execute(insert_new_session_sql, (token, user_id, token_created_at))
+    db.commit()
+    return jsonify({'message': 'User signed up successfully', 'token': token}), 200
+
   except sqlite3.Error as e:
     if "UNIQUE constraint failed: users.email" in str(e):
         return jsonify({'error': 'Email already in use'}), 409
     db.rollback()
     return jsonify({'error': 'Database error occurred'}), 500
-
-  return jsonify({'message': 'User signed up successfully'}), 200
 
 #########################################
 
@@ -146,28 +153,38 @@ def shared_login():
   email = data.get('email')
   password = data.get('password')
 
-  user_hashed_password = None
-  passwords_match = False
-
   if not all([email, password]):
     return jsonify({'error': 'Missing required fields'}), 400
 
-  sql = "SELECT * FROM users WHERE email = ?"
-
   db = get_db()
-  cursor = db.cursor()
-  cursor.execute(sql, (email,))
-  user = cursor.fetchone()
+  try:
+    cursor = db.cursor()
+    return_saved_email_sql = "SELECT * FROM users WHERE email = ?"
+    cursor.execute(return_saved_email_sql, (email,))
+    user = cursor.fetchone()
 
-  if(user):
+    if user is None:
+      return jsonify({'error': "Email not found"}), 404
+
     user_hashed_password = user['password']
+    user_id = user['id']
+
     hashed_password = hash_password(password)
     passwords_match = (hashed_password == user_hashed_password)
-  
-  if (user and passwords_match):
-    return jsonify({'message': 'Login successful'}), 200
-  else:
-    return jsonify({'error': 'Invalid email or password'}), 401
+
+    if passwords_match:
+      token = secrets.token_urlsafe(64)
+      insert_new_session_sql = "INSERT INTO sessions (token, user_id, created_at) VALUES (?, ?, ?)"
+      token_created_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+      cursor.execute(insert_new_session_sql, (token, user_id, token_created_at))
+      db.commit()
+      return jsonify({'message': 'Login successful', 'token': token}), 200
+
+    else:
+      return jsonify({'error': 'Invalid password'}), 401
+
+  except sqlite3.Error as e:
+    return jsonify({'error': 'Database error occurred'}), 500
 
 ########################################################################
 # MAIN

@@ -1,3 +1,5 @@
+////////////////////////////////////////////////////////////////////////
+
 // Enum to hold name validation statuses.
 const NAME_VALIDATION_STATUSES = Object.freeze({
   EMPTY: 'Empty',
@@ -8,12 +10,16 @@ const NAME_VALIDATION_STATUSES = Object.freeze({
   VALID: 'Valid'
 });
 
+////////////////////////////////////////////////////////////////////////
+
 // Enum to hold email validation statuses.
 const EMAIL_VALIDATION_STATUSES = Object.freeze({
   EMPTY: 'Empty',
   INVALID_FORMAT: 'Invalid Format',
   VALID: 'Valid'
 });
+
+////////////////////////////////////////////////////////////////////////
 
 // Enum to hold password validation statuses.
 const PASSWORD_VALIDATION_STATUSES = Object.freeze({
@@ -25,6 +31,8 @@ const PASSWORD_VALIDATION_STATUSES = Object.freeze({
   NO_SPECIAL_CHAR: 'No Special Character',
   VALID: 'Valid'
 });
+
+////////////////////////////////////////////////////////////////////////
 
 // Function to validate a first or last name passed into a form.
 function validateName(name) 
@@ -39,6 +47,8 @@ function validateName(name)
   return NAME_VALIDATION_STATUSES.VALID;
 }
 
+////////////////////////////////////////////////////////////////////////
+
 // Function to validate an email address passed into a form.
 function validateEmail(email) 
 {
@@ -49,7 +59,9 @@ function validateEmail(email)
   return EMAIL_VALIDATION_STATUSES.VALID;
 }
 
-// Function to validate a new password passed into a form.
+////////////////////////////////////////////////////////////////////////
+
+// Function to validate a new password passed into a signup form.
 function validateNewPassword(password) 
 {
   password = password.trim();
@@ -61,3 +73,15 @@ function validateNewPassword(password)
   if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) { return PASSWORD_VALIDATION_STATUSES.NO_SPECIAL_CHAR; }
   return PASSWORD_VALIDATION_STATUSES.VALID;
 }
+
+////////////////////////////////////////////////////////////////////////
+
+// Function to validate a current password passed into a login form.
+function validateCurrentPasssword(password)
+{
+  password = password.trim();
+  if (!password) { return PASSWORD_VALIDATION_STATUSES.EMPTY; }
+  return PASSWORD_VALIDATION_STATUSES.VALID;
+}
+
+////////////////////////////////////////////////////////////////////////

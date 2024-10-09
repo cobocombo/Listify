@@ -36,18 +36,25 @@ document.addEventListener('DOMContentLoaded', function ()
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({'first-name': firstName, 'last-name': lastName, 'email': email, 'password': password })
     })
-    .then(response => 
-    {
-      if(response.status === 409) { UIkit.notification({ message: 'EMAIL IS ALREADY IN USE. LOGIN INSTEAD?', status: 'danger', pos: 'top-center', timeout: 2500}); }
-      else if(response.status === 400) { UIkit.notification({ message: 'MUST FILL OUT ALL DATA FIELDS', status: 'danger', pos: 'top-center', timeout: 2500}); }
-      else if(response.status === 200) { window.location.href = '/dashboard'; }
-      else { UIkit.notification({ message: 'UNEXPECTED ERROR OCCURRED. PLEASE TRY AGAIN', status: 'danger', pos: 'top-center', timeout: 2500}); }
-      hideSpinnerWithOverlay();
-    })
-    .catch(error => 
-    {
-      console.error('Error:', error);
-      hideSpinnerWithOverlay();
+    .then(response => response.json()
+      .then(data => 
+      {
+        if(response.status === 200) 
+        { 
+          sessionStorage.setItem('session-token', data.token)
+          window.location.href = '/dashboard'; 
+        }
+        else if(response.status === 400) { UIkit.notification({ message: 'MUST FILL OUT ALL DATA FIELDS', status: 'danger', pos: 'top-center', timeout: 2500}); }
+        else if(response.status === 409) { UIkit.notification({ message: 'EMAIL IS ALREADY IN USE. LOGIN INSTEAD?', status: 'danger', pos: 'top-center', timeout: 2500}); }
+        else { UIkit.notification({ message: 'UNEXPECTED ERROR OCCURRED. PLEASE TRY AGAIN', status: 'danger', pos: 'top-center', timeout: 2500}); }
+        hideSpinnerWithOverlay();
+      })
+      .catch(err => { console.error('Error parsing response JSON', err); })
+    )
+    .catch(err => 
+    { 
+      console.error('Fetch error:', err);
+      hideSpinnerWithOverlay(); 
     });
   });
 });
