@@ -9,5 +9,6 @@ CREATE TABLE users (
 CREATE TABLE sessions (
     token TEXT PRIMARY KEY,
     user_id TEXT NOT NULL,
-    created_at DATETIME NOT NULL
+    created_at DATETIME NOT NULL,
+    platform  TEXT  NOT NULL
 );

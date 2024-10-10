@@ -119,6 +119,7 @@ def shared_signup():
   last_name = data.get('last-name')
   email = data.get('email')
   password = data.get('password')
+  platform = data.get('platform')
 
   if not all([first_name, last_name, email, password]):
     return jsonify({'error': 'Missing required fields'}), 400
@@ -132,9 +133,9 @@ def shared_signup():
     db.commit()
     user_id = cursor.lastrowid
     token = secrets.token_urlsafe(64)
-    insert_new_session_sql = "INSERT INTO sessions (token, user_id, created_at) VALUES (?, ?, ?)"
+    insert_new_session_sql = "INSERT INTO sessions (token, user_id, created_at, platform) VALUES (?, ?, ?, ?)"
     token_created_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    cursor.execute(insert_new_session_sql, (token, user_id, token_created_at))
+    cursor.execute(insert_new_session_sql, (token, user_id, token_created_at, platform))
     db.commit()
     return jsonify({'message': 'User signed up successfully', 'token': token}), 200
 
@@ -152,6 +153,7 @@ def shared_login():
   data = request.get_json()
   email = data.get('email')
   password = data.get('password')
+  platform = data.get('platform')
 
   if not all([email, password]):
     return jsonify({'error': 'Missing required fields'}), 400
@@ -173,12 +175,17 @@ def shared_login():
     passwords_match = (hashed_password == user_hashed_password)
 
     if passwords_match:
-      delete_old_session_sql = "DELETE FROM sessions WHERE user_id = ?"
-      cursor.execute(delete_old_session_sql, (user_id,))
+      delete_old_session_sql = "DELETE FROM sessions WHERE user_id = ? AND platform = ?"
+
+      if platform == 'web':
+        cursor.execute(delete_old_session_sql, (user_id, 'web'))
+      else:
+        cursor.execute(delete_old_session_sql, (user_id, 'mobile'))
+      
       token = secrets.token_urlsafe(64)
-      insert_new_session_sql = "INSERT INTO sessions (token, user_id, created_at) VALUES (?, ?, ?)"
+      insert_new_session_sql = "INSERT INTO sessions (token, user_id, created_at, platform) VALUES (?, ?, ?, ?)"
       token_created_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-      cursor.execute(insert_new_session_sql, (token, user_id, token_created_at))
+      cursor.execute(insert_new_session_sql, (token, user_id, token_created_at, platform))
       db.commit()
       return jsonify({'message': 'Login successful', 'token': token}), 200
 

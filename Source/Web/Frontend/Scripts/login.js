@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function ()
     let userData = Object.fromEntries(formData.entries());
     let email = userData['email'];
     let password = userData['password'];
+    let platform = 'web';
 
     let emailValidationResult = validateEmail(email);
     let passwordValidationResult = validateCurrentPasssword(password);
@@ -29,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function ()
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 'email': email, 'password': password })
+      body: JSON.stringify({ 'email': email, 'password': password, 'platform': platform })
     })
     .then(response => response.json()
       .then(data => 

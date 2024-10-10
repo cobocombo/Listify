@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function ()
     let lastName = userData['last-name'];
     let email = userData['email'];
     let password = userData['password'];
+    let platform = 'web';
 
     let firstNameValidationResult = validateName(firstName);
     let lastNameValidationResult = validateName(lastName);
@@ -34,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function ()
     {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({'first-name': firstName, 'last-name': lastName, 'email': email, 'password': password })
+      body: JSON.stringify({'first-name': firstName, 'last-name': lastName, 'email': email, 'password': password, 'platform': platform })
     })
     .then(response => response.json()
       .then(data => 
