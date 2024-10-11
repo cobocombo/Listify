@@ -1,6 +1,8 @@
 ////////////////////////////////////////////////////////////////////////
 
 // Function called when the user hits the login button on login.html.
+// It validates the appropriate input, and then calls the shared login api route.
+// It also handles all server responses appropriately.
 document.addEventListener('DOMContentLoaded', function () 
 {
   let form = document.getElementById('login-form');
@@ -37,6 +39,8 @@ document.addEventListener('DOMContentLoaded', function ()
       {
         if(response.status === 200) 
         {
+          if(rememberMeValidationResult == true) { localStorage.setItem('remember-me-email', email); }
+          else { localStorage.setItem('remember-me-email', 'none'); }
           sessionStorage.setItem('session-token', data.token)
           window.location.href = '/dashboard';
         }
@@ -90,6 +94,20 @@ function checkPasswordValidationResultLogin(passwordValidationResult)
 
 ////////////////////////////////////////////////////////////////////////
 
+// Remember me functionality.
+if(localStorage.getItem('remember-me-email') === null) { localStorage.setItem('remember-me-email', 'none'); }
+else if(localStorage.getItem('remember-me-email') === 'none') 
+{ 
+  document.getElementById('remember-me-checkbox').checked = false;
+  document.getElementById('email-input').value = '';
+}
+else
+{
+  document.getElementById('remember-me-checkbox').checked = true;
+  document.getElementById('email-input').value = localStorage.getItem('remember-me-email');
+}
+
+// Keep the user from opening up a context menu.
 document.addEventListener('contextmenu', event => event.preventDefault());
 
 ////////////////////////////////////////////////////////////////////////
