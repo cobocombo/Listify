@@ -12,13 +12,51 @@
   <!-- Top Navigation Bar -->
   <nav class="uk-navbar-container" uk-navbar>
     <div class="uk-navbar-left">
-      <a class="uk-navbar-item uk-logo" href="../index.html">
-        <img src="../Resources/Images/Logos/Listify-light.png" alt="Listify Logo" class="nav-logo">
-      </a>
+      <a class="uk-navbar-toggle" uk-navbar-toggle-icon uk-toggle="target: #offcanvas-nav"></a>
+    </div>
+    <div class="uk-navbar-center">
+      <div class="uk-navbar-item uk-text-large" id="page-title"></div>
     </div>
   </nav>
 
-  <script src="Libraries/uikit/js/uikit.min.js"></script>
-  <script src="Libraries/uikit/js/uikit-icons.min.js"></script>
+  <!-- Off canvas sidebar -->
+  <div id="offcanvas-nav" uk-offcanvas="overlay: true; mode: push;">
+    <div class="uk-offcanvas-bar uk-background-muted uk-padding">
+      <a class="uk-navbar-item uk-logo">
+        <img src="../Resources/Images/Logos/Listify-light.png" alt="Listify Logo" class="nav-logo">
+      </a>
+      <ul class="uk-nav uk-nav-default uk-margin-top">
+        <li><a id="home-link" class="uk-text-default">
+          <span class="icon-home"></span>Home
+        </a></li>
+        <li><a id="settings-link" class="uk-text-default">
+          <span class="icon-settings"></span>Settings
+        </a></li>
+      </ul>
+    </div>
+  </div> 
+  
+  <!-- Content Area -->
+  <div class="uk-width-expand">
+    <div class="uk-padding" id="content-area">
+      <!-- Content will be loaded dynamically here -->
+    </div>
+    </div>
+  </div>
+
+  <!-- Home Content Template -->
+  <template id="home-template">
+    <p class="uk-text-default">Welcome home!</p>
+  </template>
+
+  <!-- Settings Content Template -->
+  <template id="settings-template">
+    <p class="uk-text-default">Here are the settings.</p>
+  </template>
+
+  <!-- Scripts -->
+  <script src="../Libraries/uikit/js/uikit.min.js"></script>
+  <script src="../Libraries/uikit/js/uikit-icons.min.js"></script>
+  <script src="../Scripts/dashboard.js"></script>
 </body>
 </html>

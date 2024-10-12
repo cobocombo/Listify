@@ -34,7 +34,7 @@
   font-weight: bold;
 }
 
-.uk-navbar-nav li a, .uk-input, .checkbox-label, .uk-text-small
+.uk-navbar-nav li a, .uk-input, .checkbox-label, .uk-text-small, .uk-text-default
 {
   font-family: 'MaestroBook';
   font-weight: normal;
@@ -86,4 +86,33 @@
 {
   --sk-size: 50px;
   --sk-color: white;
+}
+
+#offcanvas-nav a 
+{
+  color: gray !important; /* Override default with custom color */
+  padding: 12px 0 !important;
+  font-size: larger !important;
+}
+
+.icon-home 
+{
+  background-image: url('../Resources/Images/Icons/home.png');
+  background-size: contain; /* Adjust size to fit the icon */
+  background-repeat: no-repeat;
+  display: inline-block;
+  width: 28px; /* Set width for the icon */
+  height: 28px; /* Set height for the icon */
+  margin-right: 14px; /* Space between icon and text */
+}
+
+.icon-settings 
+{
+  background-image: url('../Resources/Images/Icons/cog.png');
+  background-size: contain; /* Adjust size to fit the icon */
+  background-repeat: no-repeat;
+  display: inline-block;
+  width: 28px; /* Set width for the icon */
+  height: 28px; /* Set height for the icon */
+  margin-right: 14px; /* Space between icon and text */
 }

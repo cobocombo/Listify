@@ -107,6 +107,8 @@ else
   document.getElementById('email-input').value = localStorage.getItem('remember-me-email');
 }
 
+////////////////////////////////////////////////////////////////////////
+
 // Keep the user from opening up a context menu.
 document.addEventListener('contextmenu', event => event.preventDefault());
 
