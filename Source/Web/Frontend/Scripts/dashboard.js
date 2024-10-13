@@ -30,6 +30,12 @@ document.addEventListener('DOMContentLoaded', function()
     switchContentFromTemplate('home-template');
   });
 
+  document.getElementById('listings-link').addEventListener('click', function() 
+  {
+    setActiveLink(this.parentElement, 'Listings');
+    switchContentFromTemplate('listings-template');
+  });
+
   document.getElementById('settings-link').addEventListener('click', function() 
   {
     setActiveLink(this.parentElement, 'Settings');
