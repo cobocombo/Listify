@@ -34,6 +34,16 @@ const PASSWORD_VALIDATION_STATUSES = Object.freeze({
 
 ////////////////////////////////////////////////////////////////////////
 
+const PIN_VALIDATION_STATUSES = Object.freeze({
+  EMPTY: 'Empty',
+  TOO_SHORT: 'Too Short',
+  TOO_LONG: 'Too Long',
+  INVALID_CHARACTER: 'Invalid Character',
+  VALID: 'Valid'
+});
+
+////////////////////////////////////////////////////////////////////////
+
 // Function to validate a first or last name passed into a form.
 function validateName(name) 
 {
@@ -82,6 +92,21 @@ function validateCurrentPasssword(password)
   password = password.trim();
   if (!password) { return PASSWORD_VALIDATION_STATUSES.EMPTY; }
   return PASSWORD_VALIDATION_STATUSES.VALID;
+}
+
+////////////////////////////////////////////////////////////////////////
+
+// Function to validate a 4 digit pin code passed into a login form.
+function validatePin(pin) 
+{
+  pin = pin.trim();
+  
+  if (!pin) { return PIN_VALIDATION_STATUSES.EMPTY; }
+  if (pin.length < 4) { return PIN_VALIDATION_STATUSES.TOO_SHORT; }
+  if (pin.length > 4) { return PIN_VALIDATION_STATUSES.TOO_LONG; }
+  let pinPattern = /^[0-9]+$/;
+  if (!pinPattern.test(pin)) { return PIN_VALIDATION_STATUSES.INVALID_CHARACTER; }
+  return PIN_VALIDATION_STATUSES.VALID;
 }
 
 ////////////////////////////////////////////////////////////////////////

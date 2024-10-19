@@ -14,16 +14,19 @@ document.addEventListener('DOMContentLoaded', function ()
     let lastName = userData['last-name'];
     let email = userData['email'];
     let password = userData['password'];
+    let pin = userData['pin'];
     let platform = 'web';
 
     let firstNameValidationResult = validateName(firstName);
     let lastNameValidationResult = validateName(lastName);
     let emailValidationResult = validateEmail(email);
     let passwordValidationResult = validateNewPassword(password);
+    let pinValidationResult = validatePin(pin);
 
     if(checkFirstAndLastNameValidationResultsSignup(firstNameValidationResult, lastNameValidationResult) == false) { return; }
     if(checkEmailValidationResultSignup(emailValidationResult) == false) { return; }
     if(checkPasswordValidationResultSignup(passwordValidationResult) == false) { return; }
+    if(checkPinValidationResultSignup(pinValidationResult) == false) { return; }
     if(checkForTermsCheckboxValidation(document.getElementById("terms-checkbox").checked) == false) { return; }
 
     if(DEBUG_MODE == true) { baseUrl = DEBUG_BASE_URL; }
@@ -35,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function ()
     {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({'first-name': firstName, 'last-name': lastName, 'email': email, 'password': password, 'platform': platform })
+      body: JSON.stringify({'first-name': firstName, 'last-name': lastName, 'email': email, 'password': password, 'pin': pin, 'platform': platform })
     })
     .then(response => response.json()
       .then(data => 
@@ -173,6 +176,35 @@ function checkPasswordValidationResultSignup(passwordValidationResult)
   else if(passwordValidationResult == PASSWORD_VALIDATION_STATUSES.NO_SPECIAL_CHAR)
   {
     UIkit.notification({ message: 'PASSWORD NEEDS TO HAVE ATLEAST 1 SPECIAL CHARACTER', status: 'danger', pos: 'top-center', timeout: 2500});
+    return false;
+  }
+  return true;
+}
+
+////////////////////////////////////////////////////////////////////////
+
+// Function to check the 4 digit pin code validation result and notify the user based on each type of result can be returned 
+// from the pin code validation. Returns false if any of the results came back as anything but valid. See inputValidator.js.
+function checkPinValidationResultSignup(pinValidationResult)
+{
+  if(pinValidationResult == PIN_VALIDATION_STATUSES.EMPTY)
+  {
+    UIkit.notification({ message: 'EMPTY PIN CODE', status: 'danger', pos: 'top-center', timeout: 2500});
+    return false;
+  }
+  else if(pinValidationResult == PIN_VALIDATION_STATUSES.TOO_SHORT)
+  {
+    UIkit.notification({ message: 'PIN CODE TOO SHORT', status: 'danger', pos: 'top-center', timeout: 2500});
+    return false;
+  }
+  else if(pinValidationResult == PIN_VALIDATION_STATUSES.TOO_LONG)
+  {
+    UIkit.notification({ message: 'PIN CODE TOO LONG', status: 'danger', pos: 'top-center', timeout: 2500});
+    return false;
+  }
+  else if(pinValidationResult == PIN_VALIDATION_STATUSES.INVALID_CHARACTER)
+  {
+    UIkit.notification({ message: 'PIN CODE CONTAINED AN INVALID CHARACTER', status: 'danger', pos: 'top-center', timeout: 2500});
     return false;
   }
   return true;

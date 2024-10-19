@@ -2,7 +2,7 @@
 # LIBRARY IMPORTS
 ########################################################################
 
-from flask import Flask, jsonify, request, g
+from flask import Flask, jsonify, request, g # type: ignore
 import sqlite3
 import secrets
 from datetime import datetime
@@ -36,9 +36,9 @@ def get_db():
 
 #########################################
 
-# Function to hash the password using SHA-256.
-def hash_password(password):
-  return hashlib.sha256(password.encode('utf-8')).hexdigest()
+# Function to hash any text using SHA-256.
+def hash_text(text):
+  return hashlib.sha256(text.encode('utf-8')).hexdigest()
 
 #########################################
 
@@ -89,9 +89,9 @@ def view_web_policy_page():
 #########################################
 
 # Route called when the user accesses the reset password page of the web site.
-@app.route('/password')
+@app.route('/forgot-password')
 def view_web_reset_password_page():
-  return app.send_static_file('Pages/password.html')
+  return app.send_static_file('Pages/forgot-password.html')
 
 #########################################
 
@@ -119,17 +119,18 @@ def shared_signup():
   last_name = data.get('last-name')
   email = data.get('email')
   password = data.get('password')
+  pin = data.get('pin')
   platform = data.get('platform')
 
-  if not all([first_name, last_name, email, password]):
+  if not all([first_name, last_name, email, password, pin]):
     return jsonify({'error': 'Missing required fields'}), 400
 
   db = get_db()
   try:
     cursor = db.cursor()
-    hashed_password = hash_password(password)
-    insert_new_user_sql = """INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)"""
-    cursor.execute(insert_new_user_sql, (first_name, last_name, email, hashed_password))
+    hashed_password = hash_text(password)
+    insert_new_user_sql = """INSERT INTO users (first_name, last_name, email, password, pin) VALUES (?, ?, ?, ?, ?)"""
+    cursor.execute(insert_new_user_sql, (first_name, last_name, email, hashed_password, pin))
     db.commit()
     user_id = cursor.lastrowid
     token = secrets.token_urlsafe(64)
@@ -171,7 +172,7 @@ def shared_login():
     user_hashed_password = user['password']
     user_id = user['id']
 
-    hashed_password = hash_password(password)
+    hashed_password = hash_text(password)
     passwords_match = (hashed_password == user_hashed_password)
 
     if passwords_match:
@@ -194,6 +195,67 @@ def shared_login():
 
   except sqlite3.Error as e:
     return jsonify({'error': 'Database error occurred'}), 500
+
+#########################################
+
+# Route called when the user is validating their email in the forgot password form on web or mobile.
+@app.route('/shared/api/validate-email', methods=['POST'])
+def shared_validate_email():
+  data = request.get_json()
+  email = data.get('email')
+
+  if not email:
+    return jsonify({'status': 'error', 'message': 'Email is required'}), 400
+
+  db = get_db()
+  try:
+    cursor = db.cursor()
+    get_user_sql = 'SELECT * FROM users WHERE email = ?'
+    cursor.execute(get_user_sql, (email,))
+    user = cursor.fetchone()
+    if user:
+      return jsonify({'status': 'success', 'message': 'Email is valid'}), 200
+    else:
+      return jsonify({'status': 'error', 'message': 'Email not found'}), 404
+  except Exception as e:
+    return jsonify({'status': 'error', 'message': str(e)}), 500
+
+#########################################
+
+# Route called when the user is resetting their password after validating their email on web or mobile.
+@app.route('/shared/api/reset-password', methods=['POST'])
+def shared_reset_password():
+  data = request.get_json()
+  email = data.get('email')
+  pin = data.get('pin')
+  password = data.get('password')
+
+  if not all([email, pin, password]):
+    return jsonify({'error': 'Missing required fields'}), 400
+
+  db = get_db()
+  try:
+    cursor = db.cursor()
+    get_user_sql = 'SELECT * FROM users WHERE email = ?'
+    cursor.execute(get_user_sql, (email,))
+    user = cursor.fetchone()
+
+    if user:
+      pin_code = user['pin']
+      if pin != pin_code:
+        return jsonify({'status': 'error', 'message': 'PIN code does not match'}), 401
+      
+      hashed_password = hash_text(password)
+      update_password_sql = 'UPDATE users SET password = ? WHERE email = ?'
+      cursor.execute(update_password_sql, (hashed_password, email))
+      db.commit()
+
+      return jsonify({'status': 'success', 'message': 'Password reset successful'}), 200
+    else:
+      return jsonify({'status': 'error', 'message': 'Email not found'}), 404
+
+  except Exception as e:
+    return jsonify({'status': 'error', 'message': str(e)}), 500
 
 ########################################################################
 # MAIN

@@ -28,6 +28,9 @@
           <input class="uk-input" type="password" name="password" placeholder="Password">
         </div>
         <div class="uk-margin">
+          <input class="uk-input" type="number" name="pin" placeholder="4-Digit PIN For Future Password Resets" minlength="4" maxlength="4" oninput="if(this.value.length > 4) this.value = this.value.slice(0, 4);">
+        </div>
+        <div class="uk-margin">
           <label class="checkbox-label">
             <input class="uk-checkbox" type="checkbox" id="terms-checkbox"> I agree to the <a href="/terms">Terms of Service</a> & <a href="/policy">Privacy Policy</a>
           </label>
