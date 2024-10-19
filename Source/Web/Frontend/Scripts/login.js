@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function ()
           sessionStorage.setItem('session-token', data.token)
           window.location.href = '/dashboard';
         }
-        else if(response.status === 401) { UIkit.notification({ message: 'MUST FILL OUT ALL DATA FIELDS', status: 'danger', pos: 'top-center', timeout: 2500}); } 
+        else if(response.status === 400) { UIkit.notification({ message: 'MUST FILL OUT ALL DATA FIELDS', status: 'danger', pos: 'top-center', timeout: 2500}); } 
         else if(response.status === 401) { UIkit.notification({ message: 'INVALID PASSWORD. PLEASE TRY AGAIN', status: 'danger', pos: 'top-center', timeout: 2500 });} 
         else if(response.status === 404) { UIkit.notification({ message: 'INVALID EMAIL. PLEASE TRY AGAIN', status: 'danger', pos: 'top-center', timeout: 2500 });} 
         else { UIkit.notification({ message: 'UNEXPECTED ERROR OCCURRED. PLEASE TRY AGAIN', status: 'danger', pos: 'top-center', timeout: 2500 });}
@@ -111,5 +111,13 @@ else
 
 // Keep the user from opening up a context menu.
 document.addEventListener('contextmenu', event => event.preventDefault());
+
+////////////////////////////////////////////////////////////////////////
+
+// Function to force an automatic refresh of the page if the user navigates away.
+window.addEventListener('pageshow', function(event) 
+{
+  if(event.persisted) { window.location.reload(); }
+});
 
 ////////////////////////////////////////////////////////////////////////

@@ -226,6 +226,15 @@ function checkForTermsCheckboxValidation(termsChecked)
 
 ////////////////////////////////////////////////////////////////////////
 
+// Keep the user from opening up a context menu.
 document.addEventListener('contextmenu', event => event.preventDefault());
+
+////////////////////////////////////////////////////////////////////////
+
+// Function to force an automatic refresh of the page if the user navigates away.
+window.addEventListener('pageshow', function(event) 
+{
+  if(event.persisted) { window.location.reload(); }
+});
 
 ////////////////////////////////////////////////////////////////////////
