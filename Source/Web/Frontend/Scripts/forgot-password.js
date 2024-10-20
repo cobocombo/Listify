@@ -87,6 +87,7 @@ document.addEventListener('DOMContentLoaded', function ()
 
 ////////////////////////////////////////////////////////////////////////
 
+// Function called to modfiy the forgt password form to include the pin code and password field.
 function modifyForgotPasswordForm()
 {
   let instructionText = document.getElementById('instruction-text');
@@ -106,14 +107,32 @@ function modifyForgotPasswordForm()
     validationEmail.parentNode.after(pinField);
   }
 
-  if (!document.querySelector('input[name="password"]')) 
+  if(!document.querySelector('input[name="password"]')) 
   {
     let passwordField = document.createElement('div');
     passwordField.classList.add('uk-margin');
     passwordField.innerHTML = `
-      <input class="uk-input" type="password" name="password" placeholder="New Password">
-    `;
+      <div class="uk-inline uk-width-1-1">
+        <input class="uk-input" type="password" name="password" placeholder="New Password" id="password-field">
+        <button class="uk-form-icon uk-form-icon-flip" type="button" uk-icon="icon: eye" id="toggle-password"></button>
+      </div>`;
     document.querySelector('input[name="pin"]').parentNode.after(passwordField);
+
+    let togglePasswordButton = document.getElementById('toggle-password');
+    togglePasswordButton.addEventListener('click', function() 
+    {
+      let passwordField = document.getElementById('password-field');
+      if(passwordField.type === "password") 
+      {
+        passwordField.type = "text";
+        this.setAttribute('uk-icon', 'icon: eye-slash');
+      } 
+      else 
+      {
+        passwordField.type = "password";
+        this.setAttribute('uk-icon', 'icon: eye');
+      }
+    });
   }
 
   let submitButton = document.getElementById('submit-button');

@@ -25,7 +25,10 @@
           <input class="uk-input" type="email" name="email" placeholder="Email">
         </div>
         <div class="uk-margin">
-          <input class="uk-input" type="password" name="password" placeholder="Password">
+          <div class="uk-inline uk-width-1-1">
+            <input class="uk-input" type="password" name="password" placeholder="Password" id="password-field">
+            <button class="uk-form-icon uk-form-icon-flip" type="button" uk-icon="icon: eye" id="toggle-password"></button>
+          </div>
         </div>
         <div class="uk-margin">
           <input class="uk-input" type="number" name="pin" placeholder="4-Digit PIN For Future Password Resets" minlength="4" maxlength="4" oninput="if(this.value.length > 4) this.value = this.value.slice(0, 4);">
