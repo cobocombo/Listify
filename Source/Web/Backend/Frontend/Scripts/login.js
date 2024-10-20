@@ -1,5 +1,25 @@
 ////////////////////////////////////////////////////////////////////////
 
+// Functionality to toggle the password field type in order to show / hide the password.
+let passwordField = document.getElementById('password-field');
+let togglePasswordButton = document.getElementById('toggle-password');
+
+togglePasswordButton.addEventListener('click', function() 
+{
+  if(passwordField.type === "password") 
+  {
+    passwordField.type = "text";
+    this.setAttribute('uk-icon', 'icon: eye-slash');
+  } 
+  else 
+  {
+    passwordField.type = "password";
+    this.setAttribute('uk-icon', 'icon: eye');
+  }
+});
+
+////////////////////////////////////////////////////////////////////////
+
 // Function called when the user hits the login button on login.html.
 // It validates the appropriate input, and then calls the shared login api route.
 // It also handles all server responses appropriately.
