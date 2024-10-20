@@ -1,2 +1,2 @@
 cd Source/Web/Backend
-python3 app.py
+python3 run.py
