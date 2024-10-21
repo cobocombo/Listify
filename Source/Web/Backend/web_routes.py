@@ -6,7 +6,7 @@ from flask import Blueprint, current_app as app # type: ignore
 ########################################################################
 # CONSTANTS
 ########################################################################
-WEB_ROUTES = Blueprint('main', __name__)
+WEB_ROUTES = Blueprint('web_routes', __name__)
 
 ########################################################################
 # FUNCTIONS
@@ -14,7 +14,7 @@ WEB_ROUTES = Blueprint('main', __name__)
 @WEB_ROUTES.route('/')
 def view_web_index_page():
   """Route called when the user accesses the index page of the web site."""
-  return app.send_static_file('index.html')
+  return app.send_static_file('Pages/index.html')
 
 #########################################
 

@@ -68,13 +68,16 @@ document.addEventListener('DOMContentLoaded', function ()
         {
           UIkit.notification({ message: 'PASSWORD RESET SUCCESSFULLY', status: 'success', pos: 'top-center', timeout: 2500});
           showSpinnerWithOverlay();
-          setTimeout(function() { window.location.href = '/login'; }, 2000);
+          setTimeout(function() 
+          { 
+            window.location.href = '/login';
+            hideSpinnerWithOverlay();
+          }, 1500);
         }
         else if(response.status === 400) { UIkit.notification({ message: 'MUST FILL OUT ALL DATA FIELDS', status: 'danger', pos: 'top-center', timeout: 2500}); }
         else if(response.status === 401) { UIkit.notification({ message: 'INCORRECT PIN CODE', status: 'danger', pos: 'top-center', timeout: 2500}); }
         else if(response.status === 404)  { UIkit.notification({ message: 'EMAIL NOT FOUND', status: 'danger', pos: 'top-center', timeout: 2500}); }
         else { UIkit.notification({ message: 'UNEXPECTED ERROR OCCURRED. PLEASE TRY AGAIN', status: 'danger', pos: 'top-center', timeout: 2500}); }
-        hideSpinnerWithOverlay();
       })
       .catch(error => 
       {
